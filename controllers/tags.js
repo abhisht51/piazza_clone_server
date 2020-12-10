@@ -30,17 +30,26 @@ exports.listTags = async (req, res, next) => {
 };
 
 exports.searchTags = async (req, res, next) => {
-  const { tag = '' } = req.params;
+  // const { tag = '' } = req.params;
+  console.log("hi");
+  let tag = req.body.tags;
+  console.log(tag);
   try {
+
+    const questions = await Question.find({tags:{ $regex: tag, $options: 'i' }}).sort([['created', -1]]);
+
     const tags = await Question.aggregate([
       { $project: { tags: 1 } },
       { $unwind: '$tags' },
-      { $group: { _id: '$tags', count: { $sum: 1 } } },
+      { $group: { _id: '$tags' } },//, count: { $sum: 1 }
       { $match: { _id: { $regex: tag, $options: 'i' } } },
       { $sort: { count: -1 } }
     ]);
-    res.json(tags);
+
+    res.json(questions);
   } catch (error) {
+    console.log("noheyy");
+
     next(error);
   }
 };

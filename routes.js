@@ -43,13 +43,13 @@ router.get('/users/:search', search);
 router.get('/user/:username', find);
 
 //questions
-router.param('question', loadQuestions);
+// router.param('question', loadQuestions);
 router.post('/questions', [requireAuth, questionValidate], createQuestion);
-router.get('/question/:question', show);
-router.get('/question', listQuestions);
-router.get('/questions/:tags', listByTags);
+router.get('/getQuestion', show);//question/:question
+router.get('/questions', listQuestions);
+router.get('/getQuestionsbytags', listByTags);
 router.get('/question/user/:username', listByUser);
-router.delete('/question/:question', [requireAuth, questionAuth], removeQuestion);
+router.delete('/deleteQuestion', [requireAuth, questionAuth], removeQuestion);
 
 //tags
 router.get('/tags/populertags', listPopulerTags);

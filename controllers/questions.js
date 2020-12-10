@@ -38,13 +38,20 @@ exports.createQuestion = async (req, res, next) => {
 
 exports.show = async (req, res, next) => {
   try {
-    const { id } = req.question;
-    const question = await Question.findByIdAndUpdate(
+    let id = req.body.question;
+    console.log(id);
+    let question = await Question.findByIdAndUpdate(
       id,
       { $inc: { views: 1 } },
       { new: true }
-    ).populate('answers');
+
+    );
+    // .populate('answers');
+    console.log("hello");
+    
     res.json(question);
+    console.log(question)
+    
   } catch (error) {
     next(error);
   }
@@ -62,8 +69,10 @@ exports.listQuestions = async (req, res, next) => {
 
 exports.listByTags = async (req, res, next) => {
   try {
-    const { sortType = '-score', tags } = req.params;
-    const questions = await Question.find({ tags: { $all: tags } }).sort(sortType);
+    let tags = req.body.tags;
+    
+    // const { sortType = '-score', tags } = req.params;
+    const questions = await Question.find({ tags: { $all: tags } }).sort('-score');
     res.json(questions);
   } catch (error) {
     next(error);
@@ -84,7 +93,9 @@ exports.listByUser = async (req, res, next) => {
 
 exports.removeQuestion = async (req, res, next) => {
   try {
-    await req.question.remove();
+    console.log("heee");
+    await Question.findOneAndDelete(req.body.id);
+    // req.question.remove();
     res.json({ message: 'Your question successfully deleted.' });
   } catch (error) {
     next(error);
