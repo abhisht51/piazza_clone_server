@@ -1,4 +1,6 @@
 const { body, validationResult } = require('express-validator');
+const Question = require('../models/question');
+const User = require('../models/user');
 
 exports.loadAnswers = async (req, res, next, id) => {
   try {
@@ -21,9 +23,20 @@ exports.createAnswer = async (req, res, next) => {
 
   try {
     const { id } = req.user;
-    const { text } = req.body;
+    
+    // const { text } = req.body;
+    let text = req.body.text;
 
-    const question = await req.question.addAnswer(id, text);
+    questionID = req.body.questionid; 
+    const question = await Question.findByIdAndUpdate(
+      questionID,
+      { $push: { answers: {id,text} }}
+      // { new: true }
+    );
+    
+
+      console.log("bhagwan");
+    // const question = await req.question.addAnswer(id, text);
 
     res.status(201).json(question);
   } catch (error) {
@@ -34,7 +47,20 @@ exports.createAnswer = async (req, res, next) => {
 exports.removeAnswer = async (req, res, next) => {
   try {
     const { answer } = req.params;
-    const question = await req.question.removeAnswer(answer);
+    let answer_id = req.body.answer_id;
+    
+    let questionID = req.body.questionid; 
+    const question = await Question.findByIdAndUpdate(
+      questionID,
+      { $pull: { answers: { _id: answer_id } } },
+      { multi: true }
+      // { new: true }
+    );
+    
+
+
+
+    // const question = await req.question.removeAnswer(answer);
     res.json(question);
   } catch (error) {
     next(error);
@@ -50,8 +76,8 @@ exports.answerValidate = [
     .notEmpty()
     .withMessage('cannot be blank')
 
-    .isLength({ min: 30 })
-    .withMessage('must be at least 30 characters long')
+    // .isLength({ min: 3 })
+    // .withMessage('must be at least 3 characters long')
 
     .isLength({ max: 30000 })
     .withMessage('must be at most 30000 characters long')

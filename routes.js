@@ -53,13 +53,13 @@ router.delete('/deleteQuestion', [requireAuth, questionAuth], removeQuestion);
 
 //tags
 router.get('/tags/populertags', listPopulerTags);
-router.get('/tags/:tag', searchTags);
+router.get('/', searchTags);
 router.get('/tags', listTags);
 
 //answers
 router.param('answer', loadAnswers);
-router.post('/answer/:question', [requireAuth, answerValidate], createAnswer);
-router.delete('/answer/:question/:answer', [requireAuth, answerAuth], removeAnswer);
+router.post('/addAnswer', [requireAuth, answerValidate], createAnswer);
+router.delete('/removeAnswer', [requireAuth], removeAnswer);///:question/:answer [, answerAuth]
 
 //votes
 router.get('/votes/upvote/:question/:answer?', requireAuth, upvote);
