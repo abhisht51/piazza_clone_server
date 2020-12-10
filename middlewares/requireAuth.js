@@ -8,16 +8,20 @@ const requireAuth = (req, res, next) => {
   }
 
   try {
-    const decodedToken = jwt.verify(token.slice(7), config.jwt.secret, {
+    console.log("hello dukh")
+    const decodedToken = jwt.verify(token, 'development_secret' , { //config.jwt.secret .slice(7)
       algorithm: 'HS256',
       expiresIn: config.jwt.expiry
     });
-
+    console.log("hello dukh")
     req.user = decodedToken;
+    console.log("hello dukh2")
+
     next();
     
   } catch (error) {
     return res.status(401).json({
+      "hell":"hfsdkj",
       message: error.message
     });
   }
