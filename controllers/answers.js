@@ -1,4 +1,5 @@
 const { body, validationResult } = require('express-validator');
+const answerSchema = require('../models/answer');
 const Question = require('../models/question');
 const User = require('../models/user');
 
@@ -28,17 +29,31 @@ exports.createAnswer = async (req, res, next) => {
     let text = req.body.text;
 
     questionID = req.body.questionid; 
-    const question = await Question.findByIdAndUpdate(
-      questionID,
-      { $push: { answers: {id,text} }}
+    let question = await Question.findById(
+      questionID
+      // { $push: { answers: {id:id,text:text} }}
       // { new: true }
     );
+    // try {
+
+    //   // const answer = await answerSchema.add
+
+
+    // question.update({$push: {answers: {text:text}}})
+    // } catch (error) {
+    //   console.log(error)
+    // }
+    // question.update({$push: { answers: {author:id,text:text} }})
+    // console.log(question.answers);
+
+    // question.save();
     
 
-      console.log("bhagwan");
-    // const question = await req.question.addAnswer(id, text);
+    const questionadd = await question.addAnswer(id, text);
+    
+    console.log("bhagwan1");
 
-    res.status(201).json(question);
+    res.status(201).json(questionadd);
   } catch (error) {
     next(error);
   }

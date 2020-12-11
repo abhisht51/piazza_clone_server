@@ -7,8 +7,8 @@ const commentSchema = require('./comment');
 const answerSchema = new Schema({
   author: {
     type: Schema.Types.ObjectId,
-    ref: 'user',
-    required: true
+    ref: 'user'
+    // required: true
   },
   created: { type: Date, default: Date.now },
   text: { type: String, required: true },
